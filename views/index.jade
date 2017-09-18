@@ -1,0 +1,96 @@
+extends layout
+
+block content
+
+    .mainDiv
+        // NAV
+        nav.navbar.navbar-inverse(role="navigation")
+            .container-fluid
+                .navbar-header
+                    a.navbar-brand(href="#")=title
+                    //a.navbar-brand
+                        //img.navbar-brand-logo(src="/images/sailing2.ico")
+
+                .navbar-form.navbar-right
+
+                    a.btn.navbar-link.navbar-inverse#scheduleView(href='', data-toggle="modal", data-target="#showScheduleModal")
+                        span.glyphicon.glyphicon-calendar(aria-hidden="true") Schedule
+
+                    a.btn.navbar-link.navbar-inverse(href='', data-toggle="modal", data-target="#AddWordsModal")
+                        span.glyphicon.glyphicon-plus(aria-hidden="true") Add
+
+        hr
+        //.container
+        .thing
+            // Show Schedule MODAL
+            .modal#showScheduleModal
+                .modal-dialog
+                    .modal-content
+                        .modal-header
+                            button.close(type="button" data-dismiss="modal" aria-hidden="true") &times;
+                            h4.modal-title Current Schedule
+                        .modal-body
+                            #wordSchedule.col-md-10
+                                ul#wordList.list-group.scrollable-menu.scrollbar
+                        .modal-footer
+                            button.btn.btn-default(data-dismiss="modal") Close
+
+
+            // Add Words MODAL
+            .modal#AddWordsModal
+                .modal-dialog
+                    .modal-content
+                        .modal-header
+                            button.close(type="button" data-dismiss="modal" aria-hidden="true") &times;
+                            h4.modal-title Add Words
+                        .modal-body
+                            p Add some new words to the DB below
+                            .row.modalInputs#addWord
+                                .inputCols
+                                    label French
+                                    input.form-control#inputFrench(type="text", placeholder="Français")
+                                .inputCols
+                                    label English
+                                    input.form-control#inputEnglish(type="text", placeholder="English")
+                        .modal-footer
+                            button.btn.btn-default(data-dismiss="modal") Close
+                            button.btn.btn-success#btnAddWord Add
+
+
+            // Wrapper
+            #wrapper
+                #wordList2.panel.panel-default
+                    .panel-heading.lead Word List
+                    .panel-body
+                        section.row.text-center.placeholders
+                            .placeholder
+                                //img.img-fluid.img-rounded(src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs="
+                                //width="200" height="200" alt="Generic placeholder thumbnail")
+                                h2#french _________
+                                h4.text-muted#english _________
+
+
+            // /WORD LIST
+
+            hr
+            // /WRAPPER
+            controlButtons.pull-right
+                button.ctrlBtn#showWord.controlBtns.btn.btn-primary.btn-lg
+                    span.glyphicon.glyphicon-thumbs-down
+                button.ctrlBtn#right.controlBtns.btn.btn-default.btn-lg
+                    span.glyphicon.glyphicon-thumbs-up
+                    span.rightIndicator.text-center
+                        strong ?
+
+                button.ctrlBtn#oops.btn.btn-danger.btn-lg
+                    span.glyphicon.glyphicon-thumbs-down
+                button.ctrlBtn#doubleright.btn.btn-success.btn-lg
+                    span.glyphicon.glyphicon-thumbs-up
+                    span.rightIndicator.text-center
+                        strong !
+
+                //button.ctrlBtn#showWord.controlBtns.btn.btn-primary Give Up
+                //button.ctrlBtn#right.controlBtns.btn.btn-success Got it!
+                //button.ctrlBtn#oops.btn.btn-primary Oops Nope
+                //button.ctrlBtn#doubleright.btn.btn-success For Real Got It!
+

@@ -1,0 +1,58 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.hidden {
+  display: none;
+}
+
+#oops, #doubleright {
+    display: none;
+}
+
+.mainDiv {
+    max-width: 600px;
+}
+
+.ctrlBtn {
+    margin: 2px;
+}
+
+.modalInputs#addWord {
+    max-width: 95%;
+    margin-left: 10px;
+    margin-right:10px;
+}
+
+.inpuCols {
+    max-width: 98%;
+    margin-left: 14px;
+    padding:140px;
+}
+
+.scrollbar{
+    background-color:lightgray;height: auto;
+    max-height: 200px;
+    overflow-x:hidden;
+    overflow-y:scroll;
+    min-width: 135px;
+    margin-top: 0px;
+}
+
+.modal-backdrop.show, .modal-backdrop.fade.in {
+    opacity: 0.8 !important;
+}
+
+.rightIndicator {
+    margin-left: 5px;
+}
+
+
+span.badge.schedulePast {
+    background-color: #3bafda;
+}
