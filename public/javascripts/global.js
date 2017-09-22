@@ -27,6 +27,8 @@ var max_stack_length = -1;
 var fail_grade = 1;
 var succeed_grade = 4;
 
+var enable_video_load = localStorage.getItem('videoEnabled') || 'true';
+
 
 // DOM Ready =============================================================
 $(document).ready(function() {
@@ -38,11 +40,38 @@ $(document).ready(function() {
 
 
 
+function toggleVideo(videoEnabled) {
+
+    enable_video_load = videoEnabled.toString();
+
+    if (videoEnabled) {
+        $('#vidContainer').show();
+    } else {
+        $('#vidContainer').hide();
+    }
+
+}
+
+
+
+$('#videoOnOff').on('click', function(event){
+
+    toggleVideo(this.checked);
+    localStorage.setItem('videoEnabled', this.checked);
+
+});
+
+
 function initPage() {
 
     /*
      Set up everything for initial pageload.
      */
+
+    if (enable_video_load !== 'true') {
+        document.getElementById('videoOnOff').click();
+    }
+
 
     addCardsToStack();
 }
@@ -104,6 +133,43 @@ function advance() {
 }
 
 
+function updateVideo() {
+
+    /*
+    Update the video player with the most current card's data
+     */
+    console.log('updating video....');
+
+    var video_location = current_card.video_location;
+    // test vid
+    if (video_location === "") {
+        video_location = "/video/s/supercut.mp4"
+    }
+
+    var video = document.getElementById('vid');
+    // var source = document.createElement('vidSource');
+
+    video.setAttribute('src', video_location);
+    // video.appendChild(source);
+
+}
+
+
+
+$('#vid').parent().click(function () {
+
+    if($(this).children(".video").get(0).paused){
+        $(this).children(".video").get(0).play();
+        $(this).children(".playpause").fadeOut();
+    }
+
+    else{
+        $(this).children(".video").get(0).pause();
+        $(this).children(".playpause").fadeIn();
+    }
+});
+
+
 
 
 function updateCurrentPage() {
@@ -114,8 +180,11 @@ function updateCurrentPage() {
 
     var current_unix_time = Math.floor(Date.now() / 1000);
 
+    updateVideo();
+
     $('#french').text(current_card.french);
     $('#english').text('_________');
+
 
 }
 

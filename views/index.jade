@@ -30,10 +30,13 @@ block content
                             button.close(type="button" data-dismiss="modal" aria-hidden="true") &times;
                             h4.modal-title Current Schedule
                         .modal-body
-                            #wordSchedule.col-md-10
+                            hr
+                            //#wordSchedule.col-md-10
+                            #wordSchedule
                                 ul#wordList.list-group.scrollable-menu.scrollbar
                         .modal-footer
-                            button.btn.btn-default(data-dismiss="modal") Close
+                            hr
+                            //button.btn.btn-default(data-dismiss="modal") Close
 
 
             // Add Words MODAL
@@ -61,7 +64,13 @@ block content
             #wrapper
                 #wordList2.panel.panel-default
                     .panel-heading.lead Word List
+
+                    .embed-responsive.embed-responsive-16by9#vidContainer
+                        video.video#vid.embed-responsive-item(src="/video/s/supercut.mp4")
+                        .playpause
+
                     .panel-body
+                        //img(src="/images/sailing.png")
                         section.row.text-center.placeholders
                             .placeholder
                                 //img.img-fluid.img-rounded(src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs="
@@ -74,23 +83,28 @@ block content
 
             hr
             // /WRAPPER
-            controlButtons.pull-right
-                button.ctrlBtn#showWord.controlBtns.btn.btn-primary.btn-lg
-                    span.glyphicon.glyphicon-thumbs-down
-                button.ctrlBtn#right.controlBtns.btn.btn-default.btn-lg
-                    span.glyphicon.glyphicon-thumbs-up
-                    span.rightIndicator.text-center
-                        strong ?
+            .row
+                controlToggls.pull-left
+                    .col-md-4
+                        label.toggle
+                            input.iCheck-helper#videoOnOff(type="checkbox" checked="")
+                            span.handle
+                        br
+                        label(for="videoOnOff")
+                            span.text-muted.text-center Video
 
-                button.ctrlBtn#oops.btn.btn-danger.btn-lg
-                    span.glyphicon.glyphicon-thumbs-down
-                button.ctrlBtn#doubleright.btn.btn-success.btn-lg
-                    span.glyphicon.glyphicon-thumbs-up
-                    span.rightIndicator.text-center
-                        strong !
+                controlButtons.pull-right
+                    button.ctrlBtn#showWord.controlBtns.btn.btn-primary.btn-lg
+                        span.glyphicon.glyphicon-thumbs-down
+                    button.ctrlBtn#right.controlBtns.btn.btn-default.btn-lg
+                        span.glyphicon.glyphicon-thumbs-up
+                        span.rightIndicator.text-center
+                            strong ?
 
-                //button.ctrlBtn#showWord.controlBtns.btn.btn-primary Give Up
-                //button.ctrlBtn#right.controlBtns.btn.btn-success Got it!
-                //button.ctrlBtn#oops.btn.btn-primary Oops Nope
-                //button.ctrlBtn#doubleright.btn.btn-success For Real Got It!
+                    button.ctrlBtn#oops.btn.btn-danger.btn-lg
+                        span.glyphicon.glyphicon-thumbs-down
+                    button.ctrlBtn#doubleright.btn.btn-success.btn-lg
+                        span.glyphicon.glyphicon-thumbs-up
+                        span.rightIndicator.text-center
+                            strong !
 

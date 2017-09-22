@@ -44,6 +44,9 @@ function shuffle(array) {
 
 
 
+
+
+
 /* GET users listing. */
 router.get('/get_word', function(req, res, next) {
 
@@ -284,85 +287,6 @@ router.post('/updateword', function (req, res) {
 
 
         });
-    //
-    //     .then(function () {
-    //
-    //     res.json({"msg": "Things all sent off to the DB.."});
-    // });
-
-
-
-
-    // function (docs) {
-    //
-    //         docs.forEach( function (doc) {
-    //
-    //             console.log('here is a doc i found:', doc);
-    //
-    //             var newWordData = determineTriggerTime(grade, doc.easiness_factor, doc.repetitions, doc.interval);
-    //
-    //             console.log('updating doc to:', newWordData);
-    //
-    //             doc.easiness_factor = newWordData.easiness_factor;
-    //             doc.repetitions = newWordData.repetitions;
-    //             doc.trigger_time = newWordData.next_update_time;
-    //
-    //             console.log('updating to:', doc);
-    //             collection.update(
-    //                 {french: french},
-    //                 doc
-    //             );
-    //
-    //             console.log('done updating:', doc);
-    //
-    //
-    //         });
-    //
-    //         console.log('all done?');
-    //         res.json({"msg": "Things all sent off to the DB.."});
-    //
-    //
-    //     }
-    // );
-
-    //
-    //
-    //
-    // collection.find({ french: french }, { stream: true })
-    //     .each(function(doc) {
-    //
-    //             console.log('here is a doc i found:', doc);
-    //
-    //             var newWordData = determineTriggerTime(grade, doc.easiness_factor, doc.repetitions, doc.interval);
-    //
-    //             console.log('updating doc to:', newWordData);
-    //
-    //             doc.easiness_factor = newWordData.easiness_factor;
-    //             doc.repetitions = newWordData.repetitions;
-    //             doc.trigger_time = newWordData.next_update_time;
-    //
-    //             console.log('updating to:', doc);
-    //             collection.update(
-    //                 {french: french},
-    //                 doc
-    //             );
-    //
-    //         console.log('done updating:', doc);
-    //         });
-
-    // TODO: i think this might just be stalling out and not finishing the process...
-    // TODO: it's also definitely not updating all of the trigger dates.
-    // for some reason, adding success/error here dies with 500
-        //
-        // .error(function(err) {
-        //     console.log('something fucked up!', err);
-        //     res.json({"msg": "There was a problem adding the information to the database."});
-        // });
-
-
-    // console.log('what?');
-
-
 
 
 } );
