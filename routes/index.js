@@ -10,7 +10,7 @@ router.get('/helloworld', function(req, res) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'SS_Flash' });
+  res.render('index', { title: 'ss_Flash' });
 });
 
 module.exports = router;

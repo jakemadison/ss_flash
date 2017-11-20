@@ -83,3 +83,11 @@ span.badge.schedulePast {
     /*display: block;*/
     /*opacity: 0.5;*/
 /*}*/
+
+.bg_ship {
+    opacity: .3;
+    position: fixed;
+    right: 0px;
+    bottom: 0px;
+    z-index: -1;
+}
