@@ -14,10 +14,10 @@ block content
                 .navbar-form.navbar-right
 
                     a.btn.navbar-link.navbar-inverse#scheduleView(href='', data-toggle="modal", data-target="#showScheduleModal")
-                        span.glyphicon.glyphicon-calendar(aria-hidden="true") Schedule
+                        span.glyphicon.glyphicon-calendar(aria-hidden="true")
 
                     a.btn.navbar-link.navbar-inverse(href='', data-toggle="modal", data-target="#AddWordsModal")
-                        span.glyphicon.glyphicon-plus(aria-hidden="true") Add
+                        span.glyphicon.glyphicon-plus(aria-hidden="true")
 
         hr
         //.container
@@ -35,7 +35,7 @@ block content
                             #wordSchedule
                                 ul#wordList.list-group.scrollable-menu.scrollbar
                         .modal-footer
-                            hr
+                            //hr
                             //button.btn.btn-default(data-dismiss="modal") Close
 
 
@@ -81,9 +81,9 @@ block content
 
             // /WORD LIST
 
-            hr
+            //hr
             // /WRAPPER
-            .row
+            .bottom_control
                 controlToggls.pull-left
                     .col-md-4
                         label.toggle
@@ -99,12 +99,12 @@ block content
                     button.ctrlBtn#right.controlBtns.btn.btn-default.btn-lg
                         span.glyphicon.glyphicon-thumbs-up
                         span.rightIndicator.text-center
-                            strong ?
+                            //strong ?
 
                     button.ctrlBtn#oops.btn.btn-danger.btn-lg
                         span.glyphicon.glyphicon-thumbs-down
                     button.ctrlBtn#doubleright.btn.btn-success.btn-lg
                         span.glyphicon.glyphicon-thumbs-up
                         span.rightIndicator.text-center
-                            strong !
+                            //strong !
 
