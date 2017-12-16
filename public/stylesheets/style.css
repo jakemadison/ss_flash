@@ -92,3 +92,16 @@ span.badge.schedulePast {
     bottom: 0px;
     z-index: -1;
 }
+
+#french {
+    margin-top: 0;
+}
+
+
+.wrong {
+    color: red;
+}
+
+#card_body {
+    padding: 40px;
+}

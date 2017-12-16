@@ -50,13 +50,13 @@ block content
                             p Add some new words to the DB below
                             .row.modalInputs#addWord
                                 .inputCols
-                                    label French
+                                    label(for="inputFrench") Français
                                     input.form-control#inputFrench(type="text", placeholder="Français")
                                 .inputCols
-                                    label English
+                                    label(for="inputEnglish") English
                                     input.form-control#inputEnglish(type="text", placeholder="English")
                         .modal-footer
-                            button.btn.btn-default(data-dismiss="modal") Close
+                            //button.btn.btn-default(data-dismiss="modal") Close
                             button.btn.btn-success#btnAddWord Add
 
 
@@ -69,14 +69,14 @@ block content
                         video.video#vid.embed-responsive-item(src="/video/s/supercut.mp4")
                         .playpause
 
-                    .panel-body
+                    .panel-body#card_body
                         //img(src="/images/sailing.png")
                         section.row.text-center.placeholders
                             .placeholder
                                 //img.img-fluid.img-rounded(src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs="
                                 //width="200" height="200" alt="Generic placeholder thumbnail")
                                 h2#french _________
-                                h4.text-muted#english _________
+                                h4.card_text.text-muted#english _________
 
 
             // /WORD LIST

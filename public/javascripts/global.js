@@ -128,6 +128,9 @@ function advance() {
     }
 
     updateCurrentPage();
+    $('.card_text').removeClass('wrong');
+    $('.card_text').addClass('text-muted');
+
 
 
 }
@@ -290,7 +293,12 @@ function handleAnswer(answer_correct) {
         var word = $('#french').text();
         updateWordData(word, fail_grade);
 
-        setTimeout(advance, 800);
+        // $('.card_text').toggleClass('text-muted', 'wrong');
+
+        $('.card_text').addClass('wrong');
+        $('.card_text').removeClass('text-muted');
+        // setTimeout(advance, 800);
+        setTimeout(advance, 1700);
         return;
     }
 
