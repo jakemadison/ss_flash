@@ -434,3 +434,22 @@ $('#wordList').scroll(function () {
 
 
 
+$('#start_edit').on('click', function (event) {
+    $('#editFrench').val(current_card.french);
+    $('#editEnglish').val(current_card.english);
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+

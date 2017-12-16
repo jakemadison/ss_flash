@@ -60,10 +60,32 @@ block content
                             button.btn.btn-success#btnAddWord Add
 
 
+
+            // Add Words MODAL
+            .modal#EditWordsModal
+                .modal-dialog
+                    .modal-content
+                        .modal-header
+                            button.close(type="button" data-dismiss="modal" aria-hidden="true") &times;
+                            h4.modal-title Edit Words
+                        .modal-body
+                            p Edit Existing words
+                            .row.modalInputs#editWord
+                                .inputCols
+                                    label(for="editFrench") Français
+                                    input.form-control#editFrench(type="text", placeholder="Français")
+                                .inputCols
+                                    label(for="editEnglish") English
+                                    input.form-control#editEnglish(type="text", placeholder="English")
+                        .modal-footer
+                            button.btn.btn-success#btnEditWord Save
+
             // Wrapper
             #wrapper
                 #wordList2.panel.panel-default
                     .panel-heading.lead Word List
+                        a.button.btn.pull-right#start_edit(href='', data-toggle="modal", data-target="#EditWordsModal")
+                            span.glyphicon.glyphicon-pencil(aria-hidden="true")
 
                     .embed-responsive.embed-responsive-16by9#vidContainer
                         video.video#vid.embed-responsive-item(src="/video/s/supercut.mp4")
@@ -99,12 +121,10 @@ block content
                     button.ctrlBtn#right.controlBtns.btn.btn-default.btn-lg
                         span.glyphicon.glyphicon-thumbs-up
                         span.rightIndicator.text-center
-                            //strong ?
 
                     button.ctrlBtn#oops.btn.btn-danger.btn-lg
                         span.glyphicon.glyphicon-thumbs-down
                     button.ctrlBtn#doubleright.btn.btn-success.btn-lg
                         span.glyphicon.glyphicon-thumbs-up
                         span.rightIndicator.text-center
-                            //strong !
 

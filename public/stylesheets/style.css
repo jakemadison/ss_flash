@@ -30,6 +30,12 @@ a {
     margin-right:10px;
 }
 
+.modalInputs#editWord {
+    max-width: 95%;
+    margin-left: 10px;
+    margin-right:10px;
+}
+
 .inpuCols {
     max-width: 98%;
     margin-left: 14px;
