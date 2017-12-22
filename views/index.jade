@@ -3,13 +3,17 @@ extends layout
 block content
 
     .mainDiv
-        // NAV
+        // NAV Bar stuff here:
         nav.navbar.navbar-inverse(role="navigation")
             .container-fluid
                 .navbar-header
-                    a.navbar-brand(href="#")=title
-                    //a.navbar-brand
-                        //img.navbar-brand-logo(src="/images/sailing2.ico")
+                    //a.btn.navbar-link.navbar-inverse#info_button(href='', data-toggle="modal", data-target="#showScheduleModal")
+                    a.navbar-brand(href="https://github.com/jakemadison/ss_flash", target='_blank')=title
+
+                .navbar-form.navbar-left
+                    a.btn.navbar-link.navbar-inverse.tooltipper#info_button
+                        //span.glyphicon.glyphicon-question-sign(aria-hidden="true", data-toggle="tooltip", data-placement="bottom", title="Tooltip on top")
+                        span.glyphicon.glyphicon-question-sign
 
                 .navbar-form.navbar-right
 
@@ -20,7 +24,7 @@ block content
                         span.glyphicon.glyphicon-plus(aria-hidden="true")
 
         hr
-        //.container
+        // All of our crazy modals go here:
         .thing
             // Show Schedule MODAL
             .modal#showScheduleModal
@@ -80,11 +84,11 @@ block content
                         .modal-footer
                             button.btn.btn-success#btnEditWord Save
 
-            // Wrapper
+            // Main Card Area
             #wrapper
                 #wordList2.panel.panel-default
                     .panel-heading.lead Word List
-                        a.button.btn.pull-right#start_edit(href='', data-toggle="modal", data-target="#EditWordsModal")
+                        a.button.btn.pull-right#start_edit(data-toggle="modal", data-target="#EditWordsModal")
                             span.glyphicon.glyphicon-pencil(aria-hidden="true")
 
                     .embed-responsive.embed-responsive-16by9#vidContainer
@@ -93,6 +97,7 @@ block content
 
                     .panel-body#card_body
                         //img(src="/images/sailing.png")
+
                         section.row.text-center.placeholders
                             .placeholder
                                 //img.img-fluid.img-rounded(src="data:image/gif;base64,R0lGODlhAQABAIABAAJ12AAAACwAAAAAAQABAAACAkQBADs="

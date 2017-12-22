@@ -3,6 +3,16 @@
  */
 
 /*
+
+Couple of small additions to make forward:
+-> on save, spin up a job to try and find the audio file of the word.  Have an 'audio' button that auto-plays
+the word on each successive card.  Could be useful for retaining more of the ennunciation of the words.
+
+-> a overall metrics info point.  hover over it to get info on how many total cards, how many shown today, etc.
+Eventually, we'll probably want to graph this out or something.  Could be cool to see for sure.
+
+
+
 This needs to be implemented as a queue system.
 
 On first load grab "n" items, keep in array.  On advance, update server, and grab a new one for the queue.
@@ -29,15 +39,24 @@ var succeed_grade = 4;
 
 var enable_video_load = localStorage.getItem('videoEnabled') || 'true';
 
+var global_data;
 
 // DOM Ready =============================================================
 $(document).ready(function() {
 
+    $('[data-toggle="tooltip"]').tooltip();
     // Populate the user table on initial page load
     initPage();
 
 });
 
+
+function get_stats_text() {
+
+    return 'Total Cards in Deck: ' + '<b>' + global_data.total + '</b>' + '<br>' +
+           'Cards Created Today: ' + '<b>' + global_data.total_created_today  + '</b>'
+
+}
 
 
 function toggleVideo(videoEnabled) {
@@ -62,6 +81,22 @@ $('#videoOnOff').on('click', function(event){
 });
 
 
+function updateGlobalData() {
+
+    $.getJSON('words/getstats', function (resp) {
+
+        console.log('received from get_stats: ', resp);
+
+        global_data = resp;
+
+        $('#info_button').attr('data-original-title', get_stats_text());
+
+    });
+
+}
+
+
+
 function initPage() {
 
     /*
@@ -74,6 +109,7 @@ function initPage() {
 
 
     addCardsToStack();
+    updateGlobalData();
 }
 
 function addCardsToStack() {
@@ -97,6 +133,8 @@ function addCardsToStack() {
         if (update_page) {
             advance();
         }
+
+        updateGlobalData();
 
     });
 }
@@ -124,12 +162,15 @@ function advance() {
         $('.controlBtns').prop('disabled', true);
         $('#french').text('No Words Found');
         $('#english').text('Consider Adding More');
+        $('#start_edit').prop('disabled', true).addClass('disabled');
         return;
     }
 
     updateCurrentPage();
-    $('.card_text').removeClass('wrong');
-    $('.card_text').addClass('text-muted');
+
+    var card_text_sel = $('.card_text');
+    card_text_sel.removeClass('wrong');
+    card_text_sel.addClass('text-muted');
 
 
 
@@ -240,8 +281,9 @@ function addWord(event) {
                 $('#inputFrench').focus();
                 // If something goes wrong, alert the error message that our service returned
 
-
             }
+
+            updateGlobalData();
 
         });
 
@@ -271,6 +313,8 @@ function updateWordData(word, grade) {
                 // alert('Response: ' + response.msg);
             //
             // }
+
+            updateGlobalData();
 
         });
 
@@ -416,7 +460,6 @@ $('#showScheduleModal').on('hidden', function (event) {
     console.log('modal closed...');
     console.log('modal closed...');
 
-
 });
 
 
@@ -442,7 +485,19 @@ $('#start_edit').on('click', function (event) {
 });
 
 
+$('#info_button').tooltip({
+    title: "Total Cards in Deck",
+    placement: "bottom",
+    html: true
+});
 
+$('#info_button').hover(function (event) {
+   // console.log('oh chits mang, global data:', global_data);
+
+    $('#info_button').tooltip();
+
+
+});
 
 
 

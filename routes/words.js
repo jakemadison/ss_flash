@@ -144,6 +144,47 @@ router.get('/getschedule', function (req, res, next) {
 });
 
 
+router.get('/getstats', function (req, res, next) {
+
+    /*
+    What kind of stats do we want?
+    - Total Number cards
+    - Total number correct? Incorrect?  Do we really care about that?
+    - Total cards for today? - Total cards for tomorrow?
+    - Total added today?
+
+     */
+
+    console.log('get stats was called!');
+    var db = req.db;
+    var collection = db.get('wordcollection');
+
+    var current_unix_time = Math.floor(Date.now() / 1000);
+    var twenty_four_hours = 24 * 60 * 60;
+    var time_threshold = current_unix_time - twenty_four_hours;
+
+    var response_vals = {
+        total: 0,
+        total_created_today: 0
+    };
+
+    collection.count({},  function (e, docs) {
+
+        response_vals.total = docs;
+
+        collection.count( { created_time: { $gt: time_threshold } }, function (e, docs) {
+
+            response_vals.total_created_today = docs;
+
+            res.json(response_vals);
+
+        });
+
+    });
+
+});
+
+
 
 
 function determineTriggerTime(grade, easiness_factor, repetitions, interval) {
