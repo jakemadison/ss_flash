@@ -13,6 +13,9 @@ the system in chunks and present that?  With english subtitles as the translatio
 
 - Button to do text only vs the above.
 
+- nice to have: github style calendar of the upcoming dates, with heatmap intensity by number of words on that day
+- if it was at the bottom of the page (but hideable) and live updating, that would be really cool.
+
  */
 
 var express = require('express');
@@ -139,6 +142,49 @@ router.get('/getschedule', function (req, res, next) {
         }
     );
 
+
+});
+
+
+router.get('/getHeatMapData', function (req, res, next) {
+    // get the entire schedule using moment to print things nicely:
+
+    console.log('getting heatmap data....');
+    var db = req.db;
+    var collection = db.get('wordcollection');
+
+    var current_unix_time = Math.floor(Date.now() / 1000);
+
+    collection.find(
+
+        {},  // <= gets everything
+        {trigger_time:1, _id:0},
+
+        function (e, docs) {
+
+            var final_data = {};
+
+            docs.forEach( function (d) {
+
+                var this_time;
+
+                if (d.trigger_time < current_unix_time) {
+                    this_time = current_unix_time;
+
+                } else {
+                    this_time = d.trigger_time;
+                }
+                if (! (this_time in final_data)) {
+                    final_data[this_time] = 0;
+                }
+
+                final_data[this_time] += 1;
+
+            });
+
+            res.json(final_data);
+        }
+    );
 
 
 });

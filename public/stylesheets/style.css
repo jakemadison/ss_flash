@@ -132,7 +132,15 @@ span.badge.schedulePast {
     white-space: nowrap;
 }
 
+.bottom_control {
+    margin-bottom: 90px;
+}
 
+.heatMapContainer {
+    /*margin: auto;*/
+    border-radius: 3px;
+    margin-left: 16px;
+}
 /*.tooltip.fade {*/
      /*!*opacity: 0 !important;;*!*/
     /*-webkit-transition: opacity .15s linear !important;*/

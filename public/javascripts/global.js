@@ -96,6 +96,32 @@ function updateGlobalData() {
 }
 
 
+var cal;
+
+function initHeatMap() {
+
+    cal = new CalHeatMap();
+
+    cal.init({
+
+        highlight: "now",
+        tooltip: true,
+        range: 10,  // six months
+        domain: "day",
+
+        // cellRadius: 2,
+        domainGutter: 6,
+        displayLegend: false,
+        // range: 6,  // six months
+        // domain: "month",
+        // subDomain: "day",
+
+        data: "http://localhost:3000/words/getHeatMapData"  // change this..
+
+    });
+}
+
+
 
 function initPage() {
 
@@ -110,6 +136,7 @@ function initPage() {
 
     addCardsToStack();
     updateGlobalData();
+    initHeatMap();
 }
 
 function addCardsToStack() {
@@ -178,6 +205,8 @@ function advance() {
 
 
 function updateVideo() {
+
+    return;
 
     /*
     Update the video player with the most current card's data
@@ -294,6 +323,8 @@ function addWord(event) {
 function updateWordData(word, grade) {
 
     // handle updating our server with the word's new grade
+    // on the server side, this will update the word to the new trigger time.
+    // once that has been done, we can update the heat map
 
     $.post(
         '/words/updateword',
@@ -304,17 +335,13 @@ function updateWordData(word, grade) {
     ).done(
         function( response ) {
             console.log(response);
-            // Check for successful (blank) response
+            // Check for unsuccessful (blank) response
             if (response.msg === '') {
-                console.log('whateverrrrrrrrrr');
+                console.log('we totally failed!');
             }
-            // else {
-            //     If something goes wrong, alert the error message that our service returned
-                // alert('Response: ' + response.msg);
-            //
-            // }
-
             updateGlobalData();
+            console.log('updating heatmap data...');
+            cal.update('http://localhost:3000/words/getHeatMapData');
 
         });
 
