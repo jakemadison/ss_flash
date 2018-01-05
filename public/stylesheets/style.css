@@ -152,6 +152,48 @@ span.badge.schedulePast {
 
 
 
+/*#countdown {*/
+    /*position: relative;*/
+    /*margin: auto;*/
+    /*margin-top: 100px;*/
+    /*height: 40px;*/
+    /*width: 40px;*/
+    /*text-align: center;*/
+/*}*/
+
+#countdown-number {
+    color: white;
+    display: inline-block;
+    line-height: 40px;
+}
+
+#circleContainer {
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*right: 0;*/
+    /*width: 4px;*/
+    /*height: 4px;*/
+    transform: rotateY(-180deg) rotateZ(-90deg);
+}
+
+.run_animation {
+    stroke-dasharray: 63px;  /*needs to be pi*r*2, where r is the circle's svg def.*/
+    stroke-dashoffset: 0px;
+    stroke-linecap: round;
+    stroke-width: 2px;
+    stroke: grey;
+    fill: none;
+    animation: countdown_animation 2s linear forwards;
+}
+
+@keyframes countdown_animation {
+    from {
+        stroke-dashoffset: 0px;
+    }
+    to {
+        stroke-dashoffset: 63px;  /*needs to be pi*r*2, where r is the circle's svg def.*/
+    }
+}
 
 
 

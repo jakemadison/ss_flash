@@ -41,6 +41,9 @@ var enable_video_load = localStorage.getItem('videoEnabled') || 'true';
 
 var global_data;
 
+var bonus_ms_threshold = 2000; // the amt of time during which you can win a bonus in ms.
+var page_start_ms_time = new Date().getTime();
+
 // DOM Ready =============================================================
 $(document).ready(function() {
 
@@ -106,12 +109,18 @@ function initHeatMap() {
 
         highlight: "now",
         tooltip: true,
+
+        itemName: ["Card", "Cards"],
+
+        domainGutter: 6,
+        displayLegend: false,
+
+
+        // cellRadius: 2,
+
         range: 10,  // six months
         domain: "day",
 
-        // cellRadius: 2,
-        domainGutter: 6,
-        displayLegend: false,
         // range: 6,  // six months
         // domain: "month",
         // subDomain: "day",
@@ -121,6 +130,10 @@ function initHeatMap() {
     });
 }
 
+
+function updateHeatMap() {
+    cal.update('http://localhost:3000/words/getHeatMapData');
+}
 
 
 function initPage() {
@@ -176,6 +189,22 @@ function toggleButtons() {
 
 }
 
+
+function resetBonusAnimation() {
+
+    // resets the animation of the bonus counter thing.
+
+    var target = document.getElementById("animator");
+
+    target.classList.remove("run_animation");
+
+    void target.offsetWidth;
+
+    target.classList.add("run_animation");
+
+}
+
+
 function advance() {
 
     /*
@@ -199,7 +228,11 @@ function advance() {
     card_text_sel.removeClass('wrong');
     card_text_sel.addClass('text-muted');
 
-
+    // reset our counter:
+    resetBonusAnimation();
+    page_start_ms_time = new Date().getTime();
+    $('.run_animation').css({ fill: "none", stroke: "grey"});
+    $('.panel-heading').css("background-color", "#e6e9ed");
 
 }
 
@@ -298,7 +331,7 @@ function addWord(event) {
         newWord
     ).done(
         function( response ) {
-            // Check for successful (blank) response
+            // Check for unsuccessful (blank) response
             if (response.msg === '') {
                 // Clear the form inputs
                 $('#addWord .inputCols input').val('');
@@ -309,6 +342,7 @@ function addWord(event) {
                 $('#addWord .inputCols input').val('');
                 $('#inputFrench').focus();
                 // If something goes wrong, alert the error message that our service returned
+                updateHeatMap();
 
             }
 
@@ -320,17 +354,22 @@ function addWord(event) {
 }
 
 
-function updateWordData(word, grade) {
+function updateWordData(word, grade, bonus) {
 
     // handle updating our server with the word's new grade
     // on the server side, this will update the word to the new trigger time.
     // once that has been done, we can update the heat map
 
+    if (bonus === undefined) {
+        bonus = false;
+    }
+
     $.post(
         '/words/updateword',
         {
             "french": word,
-            "grade": grade
+            "grade": grade,
+            "bonus": bonus
         }
     ).done(
         function( response ) {
@@ -341,7 +380,7 @@ function updateWordData(word, grade) {
             }
             updateGlobalData();
             console.log('updating heatmap data...');
-            cal.update('http://localhost:3000/words/getHeatMapData');
+            updateHeatMap();
 
         });
 
@@ -373,6 +412,7 @@ function handleAnswer(answer_correct) {
         return;
     }
 
+    // if the answer was correct, then this is our first pass.  just show the word for now.
 
     // Correct Answer:
     $('#english').text(current_card.english);
@@ -411,14 +451,36 @@ $('#oops').on('click', function(event) {
 });
 
 
+
+
 $('#doubleright').on('click', function(event) {
 
+    /*
+    running this means that we really were successful!
+
+    See if we are eligible for a bonus, and notify the server.
+
+     */
+
     event.preventDefault();
+
+    // do some kind of thing here if we were within the bonus time
+    var curr_ms_time = new Date().getTime();
+    var ms_diff = curr_ms_time - page_start_ms_time;
+    var bonus_achieved = ms_diff < bonus_ms_threshold;
+    console.log('page success happened after ms: ', ms_diff, 'bonus achieved: ', bonus_achieved);
+    if (bonus_achieved) {
+        $('.run_animation').css({ fill: "lawngreen", stroke:"green" });
+        $('.panel-heading').css("background-color", "green");
+    }
+
 
     toggleButtons();
 
     var word = $('#french').text();
-    updateWordData(word, succeed_grade);
+
+    updateWordData(word, succeed_grade, bonus_achieved);
+
     setTimeout(advance, 200);
 
 });
@@ -525,11 +587,6 @@ $('#info_button').hover(function (event) {
 
 
 });
-
-
-
-
-
 
 
 

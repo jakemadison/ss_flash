@@ -16,6 +16,33 @@ the system in chunks and present that?  With english subtitles as the translatio
 - nice to have: github style calendar of the upcoming dates, with heatmap intensity by number of words on that day
 - if it was at the bottom of the page (but hideable) and live updating, that would be really cool.
 
+- make the above hideable.
+- add another heatmap? some kind of style thing, where it just shows pending cards for today.  as like, little
+consumeable blocks?
+
+- under a certain time for correct answer, give a bonus of... something.  a day maybe.
+- add a little bonus countdown wheel.  little circle thing would be nice
+- make sure that we are adding them at times.. i think we are.
+- are we adding based on current time? or are we adding based on original trigger time?
+- still need to hook in the edit functionality again... oops.
+- average number right/wrong? some kind of scoring thing?
+- % correct today, % correct of all time. that would be badass.
+---> probably a different table
+
+
+
+--> with the heatmap, there's a difference:
+- heatmap will colour in all things during this hour, but the stack itself
+- looks at the actual time.  so, say it's 7:15, stack will be < 7:15, but
+heatmap will be < 8.
+
+- could make the stack push to the hour. makes more sense then pushing heatmap data around.
+
+to do:
+- no animation of bonus on no words found.
+- make sure animation restart works
+
+
  */
 
 var express = require('express');
@@ -233,7 +260,7 @@ router.get('/getstats', function (req, res, next) {
 
 
 
-function determineTriggerTime(grade, easiness_factor, repetitions, interval) {
+function determineTriggerTime(grade, easiness_factor, repetitions, interval, bonus) {
 
     // determine the next time that our word should trigger to get added to a stack,
     // this is basically the SM-2 algo.
@@ -266,6 +293,15 @@ function determineTriggerTime(grade, easiness_factor, repetitions, interval) {
     }
 
     var next_update_time = current_unix_time + (interval_amount * interval);
+
+    if (bonus) {
+        // assing a random bonus amount from .5 to 1 * interval_amount (usually day)
+        var bonus_amount = Math.random() * (interval_amount - (interval_amount/2));
+        console.log('adding bonus of', bonus_amount);
+        next_update_time += bonus_amount;
+    }
+
+    console.log('this word will next update on:', moment(next_update_time, "X").fromNow());
 
     return {
         "interval": interval,
@@ -334,6 +370,10 @@ router.post('/updateword', function (req, res) {
     // grade represents how well we did on a 0-5 scale, 5 being best.
     var grade = parseInt(req.body.grade.trim()) || 3;
 
+    var bonus = req.body.bonus;
+
+    console.log('update word received a bonus status of: ', bonus);
+
     if (grade > 5 || grade < 0) {
         console.log('bad grade value: ', grade);
         res.json({"msg": "There was a problem adding the information to the database."});
@@ -354,7 +394,7 @@ router.post('/updateword', function (req, res) {
          console.log('found these docs...', docs);
          docs.forEach(function (doc) {
 
-             var newWordData = determineTriggerTime(grade, doc.easiness_factor, doc.repetitions, doc.interval);
+             var newWordData = determineTriggerTime(grade, doc.easiness_factor, doc.repetitions, doc.interval, bonus);
 
              console.log('updating doc to:', newWordData);
 
