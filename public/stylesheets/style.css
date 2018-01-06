@@ -176,7 +176,7 @@ span.badge.schedulePast {
     transform: rotateY(-180deg) rotateZ(-90deg);
 }
 
-.run_animation {
+#animator {
     stroke-dasharray: 63px;  /*needs to be pi*r*2, where r is the circle's svg def.*/
     stroke-dashoffset: 0px;
     stroke-linecap: round;
@@ -195,7 +195,11 @@ span.badge.schedulePast {
     }
 }
 
-
+@keyframes countdown_restart {
+    to {
+        stroke-dashoffset: 0px;
+    }
+}
 
 
 

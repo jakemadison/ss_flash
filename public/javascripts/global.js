@@ -99,7 +99,41 @@ function updateGlobalData() {
 }
 
 
+/*
+Heatmap calendar stuff:
+ */
+
 var cal;
+
+function calculateCounts() {
+
+    // try and get our data and calculate the counts per day for display
+    // nb: should probably store the selection in global somewhee to avoid re-searching the DOM each time..
+
+    d3.selectAll(".graph").selectAll(".graph-domain").each(function (d) {
+        var day_group = d3.select(this);
+        // console.log(day_group);
+        // var text_thing = day_group.selectAll("");
+        var day_elements = day_group.selectAll("svg g rect");
+        // console.log(day_elements);
+
+        var day_total = 0;
+        day_elements.each(function (d) {
+            day_total += d.v || 0;
+        });
+
+
+        // here we can set the text amount
+        var text_thing = day_group.selectAll("text")[0];
+        // console.log(text_thing[0]);
+        text_thing[0].textContent += ' [' + day_total.toString() + ']';
+    });
+
+    console.log('done calculating counts...');
+
+
+}
+
 
 function initHeatMap() {
 
@@ -108,6 +142,7 @@ function initHeatMap() {
     cal.init({
 
         highlight: "now",
+        itemNamespace: "cal-heatmap",
         tooltip: true,
 
         itemName: ["Card", "Cards"],
@@ -115,24 +150,23 @@ function initHeatMap() {
         domainGutter: 6,
         displayLegend: false,
 
-
-        // cellRadius: 2,
-
         range: 10,  // six months
         domain: "day",
 
-        // range: 6,  // six months
-        // domain: "month",
-        // subDomain: "day",
+        onComplete: calculateCounts,
 
         data: "http://localhost:3000/words/getHeatMapData"  // change this..
 
     });
+
+
 }
 
 
 function updateHeatMap() {
     cal.update('http://localhost:3000/words/getHeatMapData');
+    // calculateCounts();
+    // cal_day.update('http://localhost:3000/words/getHeatMapData');
 }
 
 
@@ -190,19 +224,20 @@ function toggleButtons() {
 }
 
 
-function resetBonusAnimation() {
+function resetBonus() {
 
-    // resets the animation of the bonus counter thing.
+    // resets the animation of the bonus counter thing
 
-    var target = document.getElementById("animator");
+    $('.run_animation').css({ fill: "none", stroke: "grey"});
+    $('.panel-heading').css("background-color", "#e6e9ed");
 
-    target.classList.remove("run_animation");
+    var target = $("#animator");
+    target.toggle().toggle();  // can't believe it took so long to find this.  wtf.
 
-    void target.offsetWidth;
-
-    target.classList.add("run_animation");
+    page_start_ms_time = new Date().getTime();
 
 }
+
 
 
 function advance() {
@@ -219,6 +254,9 @@ function advance() {
         $('#french').text('No Words Found');
         $('#english').text('Consider Adding More');
         $('#start_edit').prop('disabled', true).addClass('disabled');
+        resetBonus();
+        var target = $("#animator");
+        target.toggle();
         return;
     }
 
@@ -229,17 +267,14 @@ function advance() {
     card_text_sel.addClass('text-muted');
 
     // reset our counter:
-    resetBonusAnimation();
-    page_start_ms_time = new Date().getTime();
-    $('.run_animation').css({ fill: "none", stroke: "grey"});
-    $('.panel-heading').css("background-color", "#e6e9ed");
+    resetBonus();
 
 }
 
 
 function updateVideo() {
 
-    return;
+    return;  // disabled for now.
 
     /*
     Update the video player with the most current card's data

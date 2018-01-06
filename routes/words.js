@@ -209,6 +209,7 @@ router.get('/getHeatMapData', function (req, res, next) {
 
             });
 
+            console.log('heatMap is done');
             res.json(final_data);
         }
     );
@@ -265,9 +266,11 @@ function determineTriggerTime(grade, easiness_factor, repetitions, interval, bon
     // determine the next time that our word should trigger to get added to a stack,
     // this is basically the SM-2 algo.
 
-    // EF:=EF+(0.1-(5-Grade)*(0.08+(5-Grade)*0.02));
+    // EF:= EF+ (0.1 - (5-Grade)* (0.08 + (5-Grade) *0.02 ) );
     // if EF<1.3 then
     // EF:=1.3;
+
+    // console.log('interval going in...', interval);
 
     var current_unix_time = Math.floor(Date.now() / 1000);
 
@@ -276,7 +279,7 @@ function determineTriggerTime(grade, easiness_factor, repetitions, interval, bon
     if (new_easiness < 1.3) { new_easiness = 1.3; }
 
     if (grade < 3) {
-        repetitions = 0;
+        repetitions = 0;  // consider decrementing repetitions instead of sending back to 0.
     }
     else {
         repetitions++;
@@ -289,6 +292,7 @@ function determineTriggerTime(grade, easiness_factor, repetitions, interval, bon
         interval = 6;
     }
     else {
+        // shouldn't interval here always be more than 6?
         interval *= new_easiness;
     }
 
@@ -300,7 +304,15 @@ function determineTriggerTime(grade, easiness_factor, repetitions, interval, bon
         console.log('adding bonus of', bonus_amount);
         next_update_time += bonus_amount;
     }
-
+    console.log(
+        'easiness: ', easiness_factor,
+        'new easiness: ', new_easiness,
+        'interval: ', interval,
+        'repetitions: ', repetitions,
+        'grade:', grade,
+        'bonus:', bonus,
+        'interval amt:', interval_amount
+    );
     console.log('this word will next update on:', moment(next_update_time, "X").fromNow());
 
     return {
@@ -401,6 +413,7 @@ router.post('/updateword', function (req, res) {
              doc.easiness_factor = newWordData.easiness_factor;
              doc.repetitions = newWordData.repetitions;
              doc.trigger_time = newWordData.next_update_time;
+             doc.interval = newWordData.interval;
 
              console.log('updating to:', doc);
              collection.update(
