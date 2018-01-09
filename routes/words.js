@@ -279,13 +279,13 @@ function determineTriggerTime(grade, easiness_factor, repetitions, interval, bon
     if (new_easiness < 1.3) { new_easiness = 1.3; }
 
     if (grade < 3) {
-        repetitions = 0;  // consider decrementing repetitions instead of sending back to 0.
+        repetitions = 0;
     }
     else {
         repetitions++;
     }
 
-    if (repetitions === 1) {
+    if (repetitions <= 1) {
         interval = 1;
     }
     else if (repetitions === 2) {

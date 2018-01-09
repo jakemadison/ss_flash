@@ -167,6 +167,10 @@ span.badge.schedulePast {
     line-height: 40px;
 }
 
+#counterContainer {
+    margin-top: 9px;
+}
+
 #circleContainer {
     /*position: absolute;*/
     /*top: 0;*/

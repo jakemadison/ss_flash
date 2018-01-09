@@ -160,6 +160,27 @@ function initHeatMap() {
     });
 
 
+    // cal.init({
+    //
+    //     highlight: "now",
+    //     itemNamespace: "cal-heatmap",
+    //     tooltip: true,
+    //
+    //     itemName: ["Card", "Cards"],
+    //
+    //     domainGutter: 6,
+    //     displayLegend: false,
+    //
+    //     range: 10,  // six months
+    //     domain: "day",
+    //
+    //     onComplete: calculateCounts,
+    //
+    //     data: "http://localhost:3000/words/getHeatMapData"  // change this..
+    //
+    // });
+
+
 }
 
 
@@ -246,6 +267,10 @@ function advance() {
     Advance forward, updating our current page.
      */
 
+    var card_text_sel = $('.card_text');
+    card_text_sel.removeClass('wrong');
+    card_text_sel.addClass('text-muted');
+
     current_card = card_stack.shift();
 
     // in case we reached the end of the stack:
@@ -261,10 +286,6 @@ function advance() {
     }
 
     updateCurrentPage();
-
-    var card_text_sel = $('.card_text');
-    card_text_sel.removeClass('wrong');
-    card_text_sel.addClass('text-muted');
 
     // reset our counter:
     resetBonus();
