@@ -227,6 +227,8 @@ router.get('/getstats', function (req, res, next) {
     - Total cards for today? - Total cards for tomorrow?
     - Total added today?
 
+    Created today should probably be "since midnight" and not "over the past 24 hours"
+
      */
 
     console.log('get stats was called!');

@@ -38,6 +38,7 @@ var fail_grade = 1;
 var succeed_grade = 4;
 
 var enable_video_load = localStorage.getItem('videoEnabled') || 'true';
+var enable_audio_load = localStorage.getItem('audioEnabled') || 'true';
 
 var global_data;
 
@@ -84,6 +85,17 @@ $('#videoOnOff').on('click', function(event){
 });
 
 
+$('#audioOnOff').on('click', function(event){
+
+    // toggleVideo(this.checked);
+    localStorage.setItem('audioEnabled', this.checked);
+
+});
+
+
+
+
+
 function updateGlobalData() {
 
     $.getJSON('words/getstats', function (resp) {
@@ -124,15 +136,32 @@ function calculateCounts() {
 
 
         // here we can set the text amount
+
+        // this needs to parse out the existing text too...
+        console.log(day_group);
         var text_thing = day_group.selectAll("text")[0];
         // console.log(text_thing[0]);
-        text_thing[0].textContent += ' [' + day_total.toString() + ']';
+        text_thing[0].textContent += ': ' + day_total.toString();
+        // text_thing[0].setAttribute('style', 'white-space: pre;');
     });
 
     console.log('done calculating counts...');
 
 
 }
+
+
+function assignDateLabel(date) {
+
+    /*
+    If == today, return "today", tomorrow => "tomorrow" else, %a.
+    Can probably use the d3 function itself here.
+     */
+
+    return date
+}
+
+
 
 
 function initHeatMap() {
@@ -155,6 +184,8 @@ function initHeatMap() {
 
         onComplete: calculateCounts,
 
+        domainLabelFormat: '%a',
+        // domainLabelFormat: assignDateLabel,
         data: "http://localhost:3000/words/getHeatMapData"  // change this..
 
     });
@@ -199,6 +230,14 @@ function initPage() {
 
     if (enable_video_load !== 'true') {
         document.getElementById('videoOnOff').click();
+    }
+
+
+    if (enable_audio_load !== 'true') {
+        console.log('boop');
+        document.getElementById('audioOnOff').click();
+    } else {
+        console.log('doop');
     }
 
 

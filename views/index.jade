@@ -128,12 +128,24 @@ block content
                         //    span.glyphicon.glyphicon-download
                         //    span.rightIndicator.text-center
 
-                        label.toggle
-                            input.iCheck-helper#videoOnOff(type="checkbox" checked="")
-                            span.handle
-                        br
-                        label(for="videoOnOff")
-                            span.text-muted.text-center Video
+
+                        controlBtn
+                            label.toggle
+                                input.iCheck-helper#videoOnOff(type="checkbox" checked="")
+                                span.handle
+                            br
+                            label(for="videoOnOff")
+                                span.text-muted.text-center Video
+
+                    .col-md-4
+                        controlBtn
+                            label.toggle
+                                input.iCheck-helper#audioOnOff(type="checkbox" checked="")
+                                span.handle
+                            br
+                            label(for="audioOnOff")
+                                span.text-muted.text-center Audio
+
 
                 controlButtons.pull-right
                     button.ctrlBtn#showWord.controlBtns.btn.btn-primary.btn-lg
