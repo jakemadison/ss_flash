@@ -233,11 +233,13 @@ function initPage() {
     }
 
 
-    if (enable_audio_load !== 'true') {
+    if (enable_audio_load === 'true') {
         console.log('boop');
-        document.getElementById('audioOnOff').click();
+        console.log('audio is on!');
     } else {
         console.log('doop');
+        console.log('audio is off!');
+        document.getElementById('audioOnOff').click();
     }
 
 
@@ -385,6 +387,13 @@ function updateCurrentPage() {
 
     $('#french').text(current_card.french);
     $('#english').text('_________');
+
+    if (enable_audio_load !== 'true') {
+        // say the word:
+        lookup_play_word();
+    }
+
+
 
 
 }
@@ -615,7 +624,6 @@ function getScheduleData() {
                 }
 
 
-
                 $('#wordList').append(target_data);
 
 
@@ -685,5 +693,73 @@ $('#info_button').hover(function (event) {
 
 
 
+
+function play_word(word_list) {
+
+
+
+    var word = word_list.shift();
+
+    console.log('looking up', word);
+    $.get('/words/sound', {sound: word}, function (res, err) {
+        console.log('received from getting sound: ', res, err);
+
+        if (res === 'FAILED') {
+            if (word_list.length > 0) {
+                play_word(word_list);
+            } else {
+                return;
+            }
+
+        }
+
+        var audio = document.getElementById("audio");
+        audio.src = res.location;
+        audio.onended = function () {
+            if (word_list.length > 0) {
+                play_word(word_list);
+            }
+        };
+        audio.play();
+
+
+    });
+
+}
+
+
+
+function lookup_play_word() {
+    /*
+    Looks up the current french word and plays it if we can find it.
+     */
+
+    var lookup = current_card.french;
+    var lookup_array = lookup.split(' ');
+    console.log('lookup array', lookup_array);
+    play_word(lookup_array);
+    // for (var i in lookup_array) {
+    //     play_word(lookup_array[);
+    // }
+
+
+
+
+}
+
+
+
+
+
+
+$('#dumbBtn').on('click', function (e) {
+
+    e.preventDefault();
+    console.log('dumb button was pressed');
+    lookup_play_word();
+
+
+
+});
 
 

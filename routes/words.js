@@ -42,11 +42,18 @@ to do:
 - no animation of bonus on no words found.
 - make sure animation restart works
 
+-- more stats I'd like to have:
+- how many times has this word been right/wrong
+- how many words right/wrong that day.
+
 
  */
 
+var sound_db = require('./sound_db');
+var sound_index = require('../public/sound_db/tag_index.json');
 var express = require('express');
 var moment = require('moment');
+var fs = require('fs');
 var router = express.Router();
 
 var interval_amount = 86400; // day
@@ -74,6 +81,86 @@ function shuffle(array) {
 
 
 
+router.get('/sound', function (req, res, next) {
+
+    /*
+    Receives a sound to lookup.  Checks our index, grabs the file location and returns it.
+    Needs to do some juggling to figure out which word to say.
+
+    todo: Right now this is confused between whether the front end should send each word in sequence,
+    or the backend should do some juggling, audio munging to get the correct sound file out.
+     */
+
+    console.log('request for sound file...');
+    var sound_req = req.query.sound;
+
+    console.log('request for sound: ', sound_req);
+    console.log(sound_index[sound_req]);
+
+    if (sound_req === undefined) {
+        console.log('can not find...');
+        res.send("FAILED");
+        res.end();
+        return;
+    }
+
+
+    if (!(sound_index[sound_req]===undefined)) {
+        var fileId = sound_index[sound_req].filename;
+        var location = './sounds/'+fileId+'.wav';
+        var payload = {
+            filename: fileId,
+            location: location,
+            sound_req: sound_req
+        };
+
+        res.json(payload);
+        return;
+    }
+
+    // if we can't find the whole phrase, try something else:
+    var lookup_array = sound_req.split(' ');
+
+    var final_lookup;
+
+    if (lookup_array.length > 1) {
+
+        final_lookup = lookup_array[1]
+    }
+
+    else {
+        final_lookup = lookup_array[0]
+    }
+
+
+
+    if (final_lookup in sound_index) {
+        var fileId = sound_index[sound_req].filename;
+        var location = './sounds/'+fileId+'.wav';
+        var payload = {
+            filename: fileId,
+            location: location,
+            sound_req: sound_req
+        };
+
+        res.json(payload);
+        return;
+    }
+
+    // load up our sound index here:
+    if (sound_index === undefined || !(sound_req in sound_index)) {
+        console.log('can not find...');
+        res.send("FAILED");
+        res.end();
+        return;
+    }
+
+
+
+
+
+
+});
 
 
 
