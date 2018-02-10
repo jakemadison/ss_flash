@@ -138,7 +138,8 @@ function calculateCounts() {
         // here we can set the text amount
 
         // this needs to parse out the existing text too...
-        console.log(day_group);
+        // console.log(day_group);
+
         var text_thing = day_group.selectAll("text")[0];
         // console.log(text_thing[0]);
         text_thing[0].textContent += ': ' + day_total.toString();
@@ -217,6 +218,7 @@ function initHeatMap() {
 
 function updateHeatMap() {
     cal.update('http://localhost:3000/words/getHeatMapData');
+    // todo: still not updating counts properly
     // calculateCounts();
     // cal_day.update('http://localhost:3000/words/getHeatMapData');
 }
@@ -234,10 +236,8 @@ function initPage() {
 
 
     if (enable_audio_load === 'true') {
-        console.log('boop');
         console.log('audio is on!');
     } else {
-        console.log('doop');
         console.log('audio is off!');
         document.getElementById('audioOnOff').click();
     }
@@ -388,9 +388,12 @@ function updateCurrentPage() {
     $('#french').text(current_card.french);
     $('#english').text('_________');
 
-    if (enable_audio_load !== 'true') {
+    if (enable_audio_load === 'true') {
+        console.log('i think audio is on, so i will play the word...');
         // say the word:
         lookup_play_word();
+    } else {
+        console.log('i dont think audio is on, so I will not play the word.');
     }
 
 
