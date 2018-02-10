@@ -450,15 +450,28 @@ function addWord(event) {
                 $('#inputFrench').focus();
                 // If something goes wrong, alert the error message that our service returned
                 updateHeatMap();
-
             }
 
             updateGlobalData();
 
         });
 
-
 }
+
+$('#startAddWordBtn').on('click', function () {
+
+    $('#inputFrench').val('');
+    var sound_found_sel = $('.soundFoundIndicator');
+
+    sound_found_sel.removeClass('btn-success btn-danger glyphicon-volume-up glyphicon-volume-off');
+    sound_found_sel.addClass('glyphicon-transfer');
+    sound_found_sel.prop('disabled', true);
+
+    // $('#inputFrench').focus();
+
+} );
+
+
 
 
 function updateWordData(word, grade, bonus) {
@@ -661,6 +674,8 @@ $('#showScheduleModal').on('hidden', function (event) {
 
 $('#wordList').scroll(function () {
 
+    // todo: add spinner here on waiting server call;
+
     // console.log($("#wordList").scrollTop(), ($("#wordList").prop('scrollHeight')));
 
     // if we've scrolled more than 75% and aren't already getting data..
@@ -681,8 +696,8 @@ $('#start_edit').on('click', function (event) {
     $('#editFrench').val(current_card.french);
     $('#editEnglish').val(current_card.english);
 
-    check_for_existing_sounds();
-
+    var lookup = $('#editFrench').val().trim();
+    check_for_existing_sounds(lookup);
 
     // okay, so, on typing, check for audio match of word/words
     // need a spinner while checking, green if match exact.
@@ -711,10 +726,10 @@ var currently_checking_db_for_sound = false;
 var sound_found;
 
 
-function check_for_existing_sounds() {
+function check_for_existing_sounds(lookup) {
     console.log('some sort of editing is in progress on the french side...');
 
-    var sound_found_sel = $('#soundFoundIndicator');
+    var sound_found_sel = $('.soundFoundIndicator');
 
     currently_checking_db_for_sound = true;
     sound_found_sel.removeClass('btn-success btn-danger glyphicon-volume-up glyphicon-volume-off');
@@ -723,7 +738,6 @@ function check_for_existing_sounds() {
 
     //start spinner
 
-    var lookup = $('#editFrench').val().trim();
     console.log('this is val: ', lookup);
     // start spinner, do check of DB for sound.  Fail: orange, green: found.  multiple options?
 
@@ -752,22 +766,25 @@ function check_for_existing_sounds() {
 
 }
 
+// check for sounds on edit:
+$('#editFrench').keyup(function() {
+    var lookup = $('#editFrench').val().trim();
+    check_for_existing_sounds(lookup);
+});
 
-$('#editFrench').keyup(check_for_existing_sounds);
-
-
-
-$('#soundFoundIndicator').on('click', function (e) {
-    console.log('sounds selector was clicked');
-
-    var audio = document.getElementById("audio");
-    audio.src = sound_found.location;
-    audio.play();
-
+// check for sounds on add:
+$('#inputFrench').keyup(function () {
+    var lookup = $('#inputFrench').val().trim();
+    check_for_existing_sounds(lookup);
 });
 
 
-
+$('.soundFoundIndicator').on('click', function (e) {
+    console.log('sounds selector was clicked');
+    var audio = document.getElementById("audio");
+    audio.src = sound_found.location;
+    audio.play();
+});
 
 
 

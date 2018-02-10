@@ -47,6 +47,16 @@ to do:
 - how many words right/wrong that day.
 
 
+
+
+- add a dictionary lookup that also functions while typing that you can hover over and it will give
+info on the word.
+
+- same dictionary icon could be in the card for availability on hover.
+
+
+- do focus properly on modal opens (edit/add)
+
  */
 
 var sound_db = require('./sound_db');

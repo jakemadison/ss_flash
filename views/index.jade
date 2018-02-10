@@ -20,7 +20,7 @@ block content
                     a.btn.navbar-link.navbar-inverse#scheduleView(href='', data-toggle="modal", data-target="#showScheduleModal")
                         span.glyphicon.glyphicon-calendar(aria-hidden="true")
 
-                    a.btn.navbar-link.navbar-inverse(href='', data-toggle="modal", data-target="#AddWordsModal")
+                    a.btn.navbar-link.navbar-inverse#startAddWordBtn(href='', data-toggle="modal", data-target="#AddWordsModal")
                         span.glyphicon.glyphicon-plus(aria-hidden="true")
 
         hr
@@ -61,6 +61,7 @@ block content
                                     input.form-control#inputEnglish(type="text", placeholder="English")
                         .modal-footer
                             //button.btn.btn-default(data-dismiss="modal") Close
+                            button.btn.glyphicon.glyphicon-transfer.soundFoundIndicator
                             button.btn.btn-success#btnAddWord Add
 
 
@@ -82,7 +83,7 @@ block content
                                     label(for="editEnglish") English
                                     input.form-control#editEnglish(type="text", placeholder="English")
                         .modal-footer
-                            button.btn.glyphicon.glyphicon-transfer#soundFoundIndicator
+                            button.btn.glyphicon.glyphicon-transfer.soundFoundIndicator
                             button.btn.btn-success#btnEditWord Save
 
             // Main Card Area
