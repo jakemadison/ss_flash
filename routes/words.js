@@ -81,6 +81,40 @@ function shuffle(array) {
 
 
 
+
+function check_sound_word_exists(sound_word) {
+
+    /*
+    receive a word/phrase and check if it exists in our sound DB.
+
+    If it does not, return False
+    If it does, return the value associated with it with some useful data (file location, for example).
+     */
+
+    if (sound_index[sound_word] === undefined) {
+        return {
+            found: false
+        };
+    }
+
+    else {
+
+        var fileId = sound_index[sound_word].filename;
+        var location = './sounds/'+fileId+'.wav';
+
+        return {
+            found: true,
+            filename: fileId,
+            location: location,
+            sound_req: sound_word
+        };
+
+    }
+
+}
+
+
+
 router.get('/sound', function (req, res, next) {
 
     /*
@@ -97,23 +131,17 @@ router.get('/sound', function (req, res, next) {
     console.log('request for sound: ', sound_req);
     console.log(sound_index[sound_req]);
 
+    var payload = {};
+
     if (sound_req === undefined) {
-        console.log('can not find...');
-        res.send("FAILED");
-        res.end();
+        payload.found = false;
+        res.json(payload);
         return;
     }
 
+    payload = check_sound_word_exists(sound_req);
 
-    if (!(sound_index[sound_req]===undefined)) {
-        var fileId = sound_index[sound_req].filename;
-        var location = './sounds/'+fileId+'.wav';
-        var payload = {
-            filename: fileId,
-            location: location,
-            sound_req: sound_req
-        };
-
+    if (payload.found) {
         res.json(payload);
         return;
     }
@@ -133,32 +161,8 @@ router.get('/sound', function (req, res, next) {
     }
 
 
-
-    if (final_lookup in sound_index) {
-        var fileId = sound_index[sound_req].filename;
-        var location = './sounds/'+fileId+'.wav';
-        var payload = {
-            filename: fileId,
-            location: location,
-            sound_req: sound_req
-        };
-
-        res.json(payload);
-        return;
-    }
-
-    // load up our sound index here:
-    if (sound_index === undefined || !(sound_req in sound_index)) {
-        console.log('can not find...');
-        res.send("FAILED");
-        res.end();
-        return;
-    }
-
-
-
-
-
+    payload = check_sound_word_exists(final_lookup);
+    res.json(payload);
 
 });
 

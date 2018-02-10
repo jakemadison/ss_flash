@@ -672,12 +672,104 @@ $('#wordList').scroll(function () {
 
 
 
+// Functions for editing existing words:
+
 $('#start_edit').on('click', function (event) {
+
+    console.log('edit word started...');
+
     $('#editFrench').val(current_card.french);
     $('#editEnglish').val(current_card.english);
 
+    check_for_existing_sounds();
+
+
+    // okay, so, on typing, check for audio match of word/words
+    // need a spinner while checking, green if match exact.
+    // we still need to trim off leading articles (le, la, un, une)
+    // and need to deal with contractions (s'emparer, l'une)
+
 
 });
+
+
+
+function saveEditedWord() {
+    console.log('saving word edit....');
+
+}
+
+
+$('#btnEditWord').on('click', saveEditedWord);
+
+
+
+
+// todo: use this var to rate-limit checking the server for a found word, but do it in such a way
+// that we definitely DO get the final keypress.  Maybe save it and fire one last time?
+var currently_checking_db_for_sound = false;
+var sound_found;
+
+
+function check_for_existing_sounds() {
+    console.log('some sort of editing is in progress on the french side...');
+
+    var sound_found_sel = $('#soundFoundIndicator');
+
+    currently_checking_db_for_sound = true;
+    sound_found_sel.removeClass('btn-success btn-danger glyphicon-volume-up glyphicon-volume-off');
+    sound_found_sel.addClass('glyphicon-transfer');
+    sound_found_sel.prop('disabled', true);
+
+    //start spinner
+
+    var lookup = $('#editFrench').val().trim();
+    console.log('this is val: ', lookup);
+    // start spinner, do check of DB for sound.  Fail: orange, green: found.  multiple options?
+
+    $.get('/words/sound', {sound: lookup}, function (res, err) {
+        console.log('received from getting sound: ', res, err);
+
+        if (res.found) {
+            console.log('found a match!', res);
+            sound_found_sel.addClass('btn-success glyphicon-volume-up');
+            sound_found_sel.removeClass('btn-danger glyphicon-volume-off glyphicon-transfer');
+            sound_found_sel.prop('disabled', false);
+            sound_found = res;
+        }
+        else {
+            console.log('unable to find a match :<');
+            sound_found_sel.addClass('btn-danger glyphicon-volume-off');
+            sound_found_sel.removeClass('btn-success glyphicon-volume-up glyphicon-transfer');
+            sound_found_sel.prop('disabled', true);
+        }
+
+        currently_checking_db_for_sound = false;
+        //end spinner
+
+
+    });
+
+}
+
+
+$('#editFrench').keyup(check_for_existing_sounds);
+
+
+
+$('#soundFoundIndicator').on('click', function (e) {
+    console.log('sounds selector was clicked');
+
+    var audio = document.getElementById("audio");
+    audio.src = sound_found.location;
+    audio.play();
+
+});
+
+
+
+
+
 
 
 $('#info_button').tooltip({
