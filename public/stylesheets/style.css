@@ -207,6 +207,7 @@ span.badge.schedulePast {
 
 
 
-
+.toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 6px; }
+.toggle.ios .toggle-handle { border-radius: 6px; }
 
 

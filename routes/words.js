@@ -57,6 +57,8 @@ info on the word.
 
 - do focus properly on modal opens (edit/add)
 
+- replace our ugly toggles with something.  http://www.bootstraptoggle.com/ ?
+
  */
 
 var sound_db = require('./sound_db');

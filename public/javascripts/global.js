@@ -38,6 +38,11 @@ var fail_grade = 1;
 var succeed_grade = 4;
 
 var enable_video_load = localStorage.getItem('videoEnabled') || 'true';
+enable_video_load = 'false';
+enable_video_load = (enable_video_load === 'true');
+toggleVideo(enable_video_load);
+
+
 var enable_audio_load = localStorage.getItem('audioEnabled') || 'true';
 
 var global_data;
@@ -65,7 +70,7 @@ function get_stats_text() {
 
 function toggleVideo(videoEnabled) {
 
-    enable_video_load = videoEnabled.toString();
+    // enable_video_load = videoEnabled.toString();
 
     if (videoEnabled) {
         $('#vidContainer').show();
@@ -79,16 +84,16 @@ function toggleVideo(videoEnabled) {
 
 $('#videoOnOff').on('click', function(event){
 
-    toggleVideo(this.checked);
-    localStorage.setItem('videoEnabled', this.checked);
+    var video_on = $(this).prop('checked');
+    localStorage.setItem('videoEnabled', video_on);
 
 });
 
 
-$('#audioOnOff').on('click', function(event){
+$('#audioOnOff').change(function(event){
 
-    // toggleVideo(this.checked);
-    localStorage.setItem('audioEnabled', this.checked);
+    var audio_on = $(this).prop('checked');
+    localStorage.setItem('audioEnabled', audio_on);
 
 });
 
@@ -230,16 +235,17 @@ function initPage() {
      Set up everything for initial pageload.
      */
 
-    if (enable_video_load !== 'true') {
-        document.getElementById('videoOnOff').click();
-    }
+    // if (enable_video_load !== 'true') {
+    //     document.getElementById('videoOnOff').click();
+    // }
 
 
     if (enable_audio_load === 'true') {
         console.log('audio is on!');
     } else {
         console.log('audio is off!');
-        document.getElementById('audioOnOff').click();
+        $('#audioOnOff').bootstrapToggle('toggle');
+        // document.getElementById('audioOnOff').click();
     }
 
 
@@ -722,6 +728,7 @@ $('#btnEditWord').on('click', saveEditedWord);
 
 // todo: use this var to rate-limit checking the server for a found word, but do it in such a way
 // that we definitely DO get the final keypress.  Maybe save it and fire one last time?
+// actually, do we really care? it's only num calls == num key presses after all
 var currently_checking_db_for_sound = false;
 var sound_found;
 
@@ -806,33 +813,29 @@ $('#info_button').hover(function (event) {
 
 
 
-function play_word(word_list) {
+function play_word(lookup_text) {
 
+    /*
+    Receives the full text for a lookup.  Server side will decide what to return as a proper match.
+    This is probably duplicating the stuff in the edit/add buttons...  eh, i guess it's kind of different enough.
+    The api call should be generalized somewhere though.
+     */
 
+    console.log('looking up', lookup_text);
 
-    var word = word_list.shift();
+    $.get('/words/sound', {sound: lookup_text}, function (res, err) {
 
-    console.log('looking up', word);
-    $.get('/words/sound', {sound: word}, function (res, err) {
         console.log('received from getting sound: ', res, err);
 
-        if (res === 'FAILED') {
-            if (word_list.length > 0) {
-                play_word(word_list);
-            } else {
-                return;
-            }
+        if (res.found) {
+            console.log('found a sound to play: ', res);
+            var audio = document.getElementById("audio");
+            audio.src = res.location;
+            audio.play();
 
+        } else {
+            console.log('unable to find sound to play');
         }
-
-        var audio = document.getElementById("audio");
-        audio.src = res.location;
-        audio.onended = function () {
-            if (word_list.length > 0) {
-                play_word(word_list);
-            }
-        };
-        audio.play();
 
 
     });
@@ -847,15 +850,7 @@ function lookup_play_word() {
      */
 
     var lookup = current_card.french;
-    var lookup_array = lookup.split(' ');
-    console.log('lookup array', lookup_array);
-    play_word(lookup_array);
-    // for (var i in lookup_array) {
-    //     play_word(lookup_array[);
-    // }
-
-
-
+    play_word(lookup);
 
 }
 
@@ -864,13 +859,13 @@ function lookup_play_word() {
 
 
 
+// a dumb btn for testing things
+
 $('#dumbBtn').on('click', function (e) {
 
     e.preventDefault();
     console.log('dumb button was pressed');
     lookup_play_word();
-
-
 
 });
 

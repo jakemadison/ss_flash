@@ -122,32 +122,23 @@ block content
             // /WRAPPER
 
             .bottom_control
+
                 audio(id="audio")
+
                 controlToggls.pull-left
-                    .col-md-4
-
-                        // a dumb button for testing things:
-                        //button.ctrlBtn#dumbBtn.btn.btn-success.btn-lg
-                        //    span.glyphicon.glyphicon-download
-                        //    span.rightIndicator.text-center
-
-
-                        controlBtn
-                            label.toggle
-                                input.iCheck-helper#videoOnOff(type="checkbox" checked="")
-                                span.handle
-                            br
-                            label(for="videoOnOff")
-                                span.text-muted.text-center Video
 
                     .col-md-4
-                        controlBtn
-                            label.toggle
-                                input.iCheck-helper#audioOnOff(type="checkbox" checked="")
-                                span.handle
-                            br
-                            label(for="audioOnOff")
-                                span.text-muted.text-center Audio
+                        input#videoOnOff(type="checkbox" disabled data-toggle="toggle" data-style="ios" data-onstyle="success")
+                        br
+                        label.checkbox-inline(for="videoOnOff")
+                            span.text-muted.text-center.glyphicon.glyphicon-facetime-video
+
+                    .col-md-4
+                        input#audioOnOff(type="checkbox" checked data-toggle="toggle" data-style="ios" data-onstyle="success")
+                        //br
+                        label.checkbox-inline(for="audioOnOff")
+                            span.text-muted.text-center.glyphicon.glyphicon-volume-up
+
 
 
                 controlButtons.pull-right
@@ -177,3 +168,7 @@ block content
                         #cal-heatmap
                         #cal-2
 
+// a dumb button for testing things:
+                        //button.ctrlBtn#dumbBtn.btn.btn-success.btn-lg
+                        //    span.glyphicon.glyphicon-download
+                        //    span.rightIndicator.text-center
