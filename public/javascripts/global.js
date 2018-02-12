@@ -695,20 +695,27 @@ $('#wordList').scroll(function () {
 
 // Functions for editing existing words:
 
+var current_edit_french;
+var current_edit_english;
+
 $('#start_edit').on('click', function (event) {
+
+    // english -> french is basically a many to many relationship.  We don't necessarily want to edit all
+    // occurences of a french word, but rather, the specific french + english pair.
+
+    // so, save the original french and english on modal open, use those for the lookup values on the server side
+    // then reset those again on save, in case of multiple saves.
 
     console.log('edit word started...');
 
-    $('#editFrench').val(current_card.french);
-    $('#editEnglish').val(current_card.english);
+    current_edit_french = current_card.french;
+    current_edit_english = current_card.english;
 
-    var lookup = $('#editFrench').val().trim();
-    check_for_existing_sounds(lookup);
+    $('#editFrench').val(current_edit_french);
+    $('#editEnglish').val(current_edit_english);
 
-    // okay, so, on typing, check for audio match of word/words
-    // need a spinner while checking, green if match exact.
-    // we still need to trim off leading articles (le, la, un, une)
-    // and need to deal with contractions (s'emparer, l'une)
+    // do a quick lookup of the existing word to color the sound btn correctly:
+    check_for_existing_sounds(current_edit_french.trim());
 
 
 });
@@ -716,13 +723,52 @@ $('#start_edit').on('click', function (event) {
 
 
 function saveEditedWord() {
+
     console.log('saving word edit....');
+    console.log('lookup vals: ', current_edit_french, current_edit_english);
+
+    var btn_edit_word_sel = $('#btnEditWord');
+    btn_edit_word_sel.prop('disabled', true);
+
+    var target_update_french =  $('#editFrench').val();
+    var target_update_english =  $('#editEnglish').val();
+
+    console.log('target update values: ', target_update_french, target_update_english);
+
+    var payload = {
+        lookup_french: current_edit_french,
+        lookup_english: current_edit_english,
+
+        target_french: target_update_french,
+        target_english: target_update_english
+    };
+
+    // now post to server:
+    $.post('/words/save_pair', payload).done(function(response) {
+
+        // here on success update global edit vars too..
+        console.log('save pair response: ', response);
+        if (response.update_successful) {
+            console.log('successful update!', response);
+        } else {
+            console.log('unsuccessful update?', response);
+        }
+
+        // the card's values are now set on DB side, so track them accordingly:
+        current_edit_french = target_update_french;
+        current_edit_english = target_update_english;
+
+        // re-enable save
+        btn_edit_word_sel.prop('disabled', false);
+
+
+        });
+
 
 }
 
 
 $('#btnEditWord').on('click', saveEditedWord);
-
 
 
 
@@ -749,7 +795,7 @@ function check_for_existing_sounds(lookup) {
     // start spinner, do check of DB for sound.  Fail: orange, green: found.  multiple options?
 
     $.get('/words/sound', {sound: lookup}, function (res, err) {
-        console.log('received from getting sound: ', res, err);
+        // console.log('received from getting sound: ', res, err);
 
         if (res.found) {
             console.log('found a match!', res);

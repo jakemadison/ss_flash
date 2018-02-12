@@ -135,6 +135,11 @@ router.get('/sound', function (req, res, next) {
 
     todo: Right now this is confused between whether the front end should send each word in sequence,
     or the backend should do some juggling, audio munging to get the correct sound file out.
+
+    todo: recognition of verb conjugations here would be hard but possibly worth it.  At least as like a
+    suggestion for add/edit.
+
+    So, could return, "not found, but closest match: "
      */
 
     console.log('request for sound file...');
@@ -159,21 +164,40 @@ router.get('/sound', function (req, res, next) {
     }
 
     // if we can't find the whole phrase, try something else:
+    var minor_articles = ['le', 'la', 'un', 'une', 'de', 'des', 'se'];
+
+    // split into component words
     var lookup_array = sound_req.split(' ');
 
-    var final_lookup;
+    // remove minor articles of speech
+    var main_words = lookup_array.filter(function (e) {
+        return this.indexOf(e)<0;
+    }, minor_articles);
 
-    if (lookup_array.length > 1) {
+    // if we are only left with one word:
+    if (main_words.length === 1) {
 
-        final_lookup = lookup_array[1]
+        var target_word = main_words[0];
+        // check to see if it is a contraction:
+        if (target_word.indexOf("'") > -1) {
+            // split again on the apostraphe:
+            lookup_array = sound_req.split("'");
+
+            // take the element after the apostraphe:  --> what if num ' > 1?
+            target_word = lookup_array[1];
+
+        }
+
+
+        payload = check_sound_word_exists(target_word);
+        res.json(payload);
+        return;
     }
 
-    else {
-        final_lookup = lookup_array[0]
-    }
-
-
-    payload = check_sound_word_exists(final_lookup);
+    // if we still have more than one word, try the phrase as a whole again.  We should still have the same order of
+    // words according to the js spec on `filter`.
+    var main_phrase = main_words.join(' ');
+    payload = check_sound_word_exists(main_phrase);
     res.json(payload);
 
 });
@@ -478,7 +502,6 @@ router.post('/addword', function(req, res) {
 });
 
 
-
 router.post('/updateword', function (req, res) {
 
     var db = req.db;
@@ -535,6 +558,39 @@ router.post('/updateword', function (req, res) {
 
 
 } );
+
+
+
+router.post('/save_pair', function (req, res) {
+
+    console.log('requested to save word pair');
+
+    var db = req.db;
+    var collection = db.get('wordcollection');
+    var targets = {
+        lookup_french: req.body.lookup_french,
+        lookup_english: req.body.lookup_english,
+        target_french: req.body.target_french,
+        target_english: req.body.target_english
+    };
+
+    console.log('requested info: ', targets);
+
+    collection.update(
+        { french: targets.lookup_french, english: targets.lookup_english },
+        {
+            $set: {
+                french: targets.target_french,
+                english: targets.target_english
+            }
+        }
+    ).then(function(docs) {
+        console.log('finished updating.. udpated: ', docs);
+        res.json({"update_successful": true})
+    });
+
+
+});
 
 
 
