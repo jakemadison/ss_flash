@@ -59,6 +59,13 @@ info on the word.
 
 - replace our ugly toggles with something.  http://www.bootstraptoggle.com/ ?
 
+
+- this really needs a deploy pipeline.  What I want to set up is a way for commits to automatically update
+- an existing page
+
+
+- add a setting for audio but no text which then just plays clips
+
  */
 
 var sound_db = require('./sound_db');
@@ -512,6 +519,8 @@ router.post('/updateword', function (req, res) {
 
     var bonus = req.body.bonus;
 
+    var id = req.body._id;
+
     console.log('update word received a bonus status of: ', bonus);
 
     if (grade > 5 || grade < 0) {
@@ -523,35 +532,41 @@ router.post('/updateword', function (req, res) {
 
     var collection = db.get('wordcollection');
 
-    console.log('updating word: ', french);
-
+    console.log('updating word: ', french, id);
 
 
     collection.find(
-        { french: french },
+        // { french: french },
+        { _id: id },
+
         {}
             ).then(function(docs) {
-         console.log('found these docs...', docs);
-         docs.forEach(function (doc) {
 
-             var newWordData = determineTriggerTime(grade, doc.easiness_factor, doc.repetitions, doc.interval, bonus);
+                console.log('found these docs...', docs);
 
-             console.log('updating doc to:', newWordData);
 
-             doc.easiness_factor = newWordData.easiness_factor;
-             doc.repetitions = newWordData.repetitions;
-             doc.trigger_time = newWordData.next_update_time;
-             doc.interval = newWordData.interval;
+                docs.forEach(function (doc) {
 
-             console.log('updating to:', doc);
-             collection.update(
-                 {french: french},
-                 doc
-             );
+                     var newWordData = determineTriggerTime(grade, doc.easiness_factor, doc.repetitions, doc.interval, bonus);
 
-             console.log('done updating:', doc);
-             res.json({"msg": "Things all sent off to the DB.."});
-         })
+                     console.log('updating doc to:', newWordData);
+
+                     doc.easiness_factor = newWordData.easiness_factor;
+                     doc.repetitions = newWordData.repetitions;
+                     doc.trigger_time = newWordData.next_update_time;
+                     doc.interval = newWordData.interval;
+
+                     console.log('updating to:', doc);
+                     collection.update(
+                         {french: french, _id: id},
+                         doc
+                     );
+
+                     console.log('done updating!!', doc);
+
+             });
+        console.log('all docs updated-d-d-d-d');
+        res.json({"msg": "Things all sent off to the DB.."});
 
 
         });

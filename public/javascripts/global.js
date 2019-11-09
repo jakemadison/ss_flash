@@ -94,6 +94,7 @@ $('#audioOnOff').change(function(event){
 
     var audio_on = $(this).prop('checked');
     localStorage.setItem('audioEnabled', audio_on);
+    enable_audio_load = audio_on.toString();
 
 });
 
@@ -486,16 +487,22 @@ function updateWordData(word, grade, bonus) {
     // on the server side, this will update the word to the new trigger time.
     // once that has been done, we can update the heat map
 
+
+    // todo: maybe we can just pass in the ID here and update based on that.
+    // no one else uses this, so who cares safety-wise.
+
     if (bonus === undefined) {
         bonus = false;
     }
+
 
     $.post(
         '/words/updateword',
         {
             "french": word,
             "grade": grade,
-            "bonus": bonus
+            "bonus": bonus,
+            "_id": current_card['_id']
         }
     ).done(
         function( response ) {
@@ -736,11 +743,13 @@ function saveEditedWord() {
     console.log('target update values: ', target_update_french, target_update_english);
 
     var payload = {
+
         lookup_french: current_edit_french,
         lookup_english: current_edit_english,
 
         target_french: target_update_french,
         target_english: target_update_english
+
     };
 
     // now post to server:
