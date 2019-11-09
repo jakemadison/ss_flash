@@ -16,6 +16,6 @@
     "monk": "^4.0.0",
     "serve-favicon": "~2.4.2",
     "bootflat": "~2.0.4",
-    "moment": "~2.18.1"
+    "moment": "~2.24.0"
   }
 }
